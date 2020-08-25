@@ -3,7 +3,7 @@ local showText = false
 
 function love.load()
     anim = Holy()
-    anim:setSpeed(1):onDone(function() showText = true end)
+    anim:setAnimation(2):setSpeed(1):onDone(function() showText = true end)
 end
 
 function love.update(dt)

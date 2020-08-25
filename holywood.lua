@@ -4,17 +4,23 @@ Holywood.__index = Holywood
 local w, h = love.graphics.getWidth(), love.graphics.getHeight()
 -- TODO
 
-function screen(opacity)
+function point(size)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.circle('fill', w / 2, h / 2, -w * size, -h * size)
+    love.graphics.setColor(1, 1, 1, 1)
+end    
+
+function simple_screen(opacity)
     love.graphics.setColor(1, 1, 1, opacity)
     love.graphics.rectangle('fill', 0, 0, w, h)
     love.graphics.setColor(1, 1, 1, 1)
 end    
 
-local animations = { {name = 'simple_screen', func = screen} , {name = 'point', func = nil} , {name = 'screen_shake' , func = nil} }
+local animations = { {name = 'simple_screen', func = simple_screen} , {name = 'point', func = point} , {name = 'screen_shake' , func = nil} }
 
 local function new(speed, opacity)
     return setmetatable({
-        _name = 'holy'          , 
+        _name = 'holy'          ,
         _animation = nil        ,
         _shapes = {}            ,
         _speed = speed or 1     ,
@@ -31,6 +37,7 @@ function Holywood:setAnimation(index)
 end
 
 function Holywood:startTransition()
+    if self._onStart ~= nil then self._onStart() end
     return self
 end
 
@@ -67,7 +74,7 @@ end
 function Holywood:draw()
     local dt = love.timer.getDelta()
     self:update(dt)
-    animations[1].func(self._opacity)
+    if self._animation ~= nil then self._animation.func(self._opacity) end
 end
 
 function Holywood:setDebug(foo)
